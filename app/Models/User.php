@@ -64,4 +64,21 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Lesson::class)->wherePivot('watched', true);
     }
+
+    /**
+     * The achievements that the user has earned.
+     */
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class);
+    }
+
+    /**
+     * The comment achievements that the user has earned.
+     */
+    public function commentAchievements()
+    {
+        return $this->belongsToMany(Achievement::class)
+            ->where('achievement_type', Comment::class);
+    }
 }
