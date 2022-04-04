@@ -30,18 +30,22 @@ class CommentWrittenListener
     {
         $user = $event->comment->user;
         $numberOfComments = $user->comments()->count();
-        $achievement = Achievement::where('required_count', $numberOfComments)
+        $achievements = Achievement::where('required_count', '<=', $numberOfComments)
             ->commentAchievements()
-            ->first();
+            ->get();
 
-        if (!$achievement) {
+        if (!$achievements->count()) {
             return;
         }
 
-        $alreadyAchieved = $user->commentAchievements()->where('comment_achievement_id', $achievement->id)->exists();
-        if ($alreadyAchieved) {
-            return;
+        foreach ($achievements as $achievement) {
+            $alreadyAchieved = $user->commentAchievements()->where('comment_achievement_id', $achievement->id)->exists();
+            if ($alreadyAchieved) {
+                continue;
+            }
+
+            $user->commentAchievements()->attach($achievement->id);
         }
-        $user->commentAchievements()->attach($achievement->id);
+
     }
 }
