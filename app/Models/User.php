@@ -90,4 +90,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Achievement::class)
             ->where('achievement_type', Lesson::class);
     }
+
+    /**
+     * Badges that the user has earned.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class);
+    }
 }
