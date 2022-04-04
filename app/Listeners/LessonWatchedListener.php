@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\AchievementUnlocked;
 use App\Events\LessonWatched;
 use App\Models\Achievement;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -46,7 +47,7 @@ class LessonWatchedListener
                 continue;
             }
 
-            $event->user->lessonsWatchedAchievements()->attach($achievement->id);
+            event(new AchievementUnlocked($achievement->name, $event->user));
         }
     }
 }

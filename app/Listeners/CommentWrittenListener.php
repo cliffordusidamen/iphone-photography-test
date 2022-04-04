@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\AchievementUnlocked;
 use App\Events\CommentWritten;
 use App\Models\Achievement;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,7 +45,7 @@ class CommentWrittenListener
                 continue;
             }
 
-            $user->commentAchievements()->attach($achievement->id);
+            event(new AchievementUnlocked($achievement->name, $user));
         }
 
     }
