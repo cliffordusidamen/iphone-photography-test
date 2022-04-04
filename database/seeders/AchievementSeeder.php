@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Achievement;
 use App\Models\Comment;
+use App\Models\Lesson;
 use Illuminate\Database\Seeder;
 
 class AchievementSeeder extends Seeder
@@ -22,24 +23,49 @@ class AchievementSeeder extends Seeder
                 'achievement_type' => Comment::class,
             ],
             [
+                'name' => '3 Comments Written',
+                'required_count' => 3,
+                'achievement_type' => Comment::class,
+            ],
+            [
                 'name' => '5 Comments Written',
                 'required_count' => 5,
                 'achievement_type' => Comment::class,
             ],
             [
-                'name' => '10 Comments Written',
+                'name' => '10 Comment Written',
                 'required_count' => 10,
                 'achievement_type' => Comment::class,
             ],
             [
-                'name' => '25 Comment Written',
-                'required_count' => 25,
+                'name' => '20 Comment Written',
+                'required_count' => 20,
                 'achievement_type' => Comment::class,
             ],
             [
-                'name' => '50 Comment Written',
+                'name' => 'First Lesson Watched',
+                'required_count' => 1,
+                'achievement_type' => Lesson::class,
+            ],
+            [
+                'name' => '5 Lessons Watched',
+                'required_count' => 5,
+                'achievement_type' => Lesson::class,
+            ],
+            [
+                'name' => '10 Lessons Watched',
+                'required_count' => 10,
+                'achievement_type' => Lesson::class,
+            ],
+            [
+                'name' => '25 Lesson Watched',
+                'required_count' => 25,
+                'achievement_type' => Lesson::class,
+            ],
+            [
+                'name' => '50 Lesson Watched',
                 'required_count' => 50,
-                'achievement_type' => Comment::class,
+                'achievement_type' => Lesson::class,
             ],
         ];
 

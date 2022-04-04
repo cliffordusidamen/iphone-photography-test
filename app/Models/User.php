@@ -81,4 +81,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Achievement::class)
             ->where('achievement_type', Comment::class);
     }
+
+    /**
+     * The comment achievements that the user has earned.
+     */
+    public function lessonsWatchedAchievements()
+    {
+        return $this->belongsToMany(Achievement::class)
+            ->where('achievement_type', Lesson::class);
+    }
 }

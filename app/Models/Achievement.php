@@ -38,4 +38,12 @@ class Achievement extends Model
     {
         return $query->where('achievement_type', Comment::class);
     }
+
+    /**
+     * Filter achievements to only lesson achievements.
+     */
+    public function scopeLessonType($query)
+    {
+        return $query->where('achievement_type', Lesson::class);
+    }
 }
