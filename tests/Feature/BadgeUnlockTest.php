@@ -18,7 +18,7 @@ class BadgeUnlockTest extends TestCase
      * @test
      * @return void
      */
-    public function test_example()
+    public function new_user_can_unlock_beginner_badge()
     {
         $this->seed();
         $user = User::factory()->create();
