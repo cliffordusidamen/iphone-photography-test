@@ -28,20 +28,18 @@ class BadgeUnlockedListener
      */
     public function handle(BadgeUnlocked $event)
     {
+        $alreadyHasBadge = $event->user->badges()->where('name', $event->badge_name)->exists();
 
-        $numberOfAchievements = $event->user->achievements()->count();
-
-        $badges = Badge::where('required_achievements', '<=', $numberOfAchievements)
-            ->get();
-
-        foreach ($badges as $badge) {
-            $alreadyHasBadge = $event->user->badges()->where('badge_id', $badge->id)->exists();
-
-            if ($alreadyHasBadge) {
-                continue;
-            }
-
-            $event->user->badges()->attach($badge->id);
+        if ($alreadyHasBadge) {
+            return;
         }
+
+        $badge = Badge::where('name', $event->badge_name)->first();
+
+        if (!$badge) {
+            return;
+        }
+
+        $event->user->badges()->attach($badge->id);
     }
 }

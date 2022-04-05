@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\AchievementUnlocked;
+use App\Events\BadgeUnlocked;
 use App\Models\Achievement;
+use App\Models\Badge;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -40,5 +42,21 @@ class AchievementUnlockedListener
         }
 
         $event->user->achievements()->attach($achievement->id);
+
+        $userAchievementsCount = $event->user->achievements()->count();
+
+        $unlockableBadges = Badge::where('required_achievements', '<=', $userAchievementsCount)
+            ->get();
+
+
+        foreach ($unlockableBadges as $badge) {
+            $alreadyHasBadge = $event->user->badges()->where('badge_id', $badge->id)->exists();
+
+            if ($alreadyHasBadge) {
+                continue;
+            }
+
+            event(new BadgeUnlocked($badge->name, $event->user));
+        }
     }
 }
