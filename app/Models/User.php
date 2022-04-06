@@ -100,4 +100,74 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Badge::class);
     }
+
+    /**
+     * Get a list of next available comment and lesson achievements
+     * for the user.
+     *
+     * @return void
+     */
+    public function getNextAvailableAchievementsAttribute()
+    {
+        $nextAvailableAchievements = [];
+        $numberOfComments = $this->comments()->count();
+        $nextCommentAchievement = Achievement::commentAchievements()
+            ->where('required_count', '>', $numberOfComments)
+            ->orderBy('required_count')
+            ->first();
+        if ($nextCommentAchievement) {
+            $nextAvailableAchievements[] = $nextCommentAchievement->name;
+        }
+    
+        $numberOfLessonsWatched = $this->watched()->count();
+        $nextLessonAchievement = Achievement::lessonType()
+            ->where('required_count', '>', $numberOfLessonsWatched)
+            ->orderBy('required_count')
+            ->first();
+        if ($nextLessonAchievement) {
+            $nextAvailableAchievements[] = $nextLessonAchievement->name;
+        }
+
+        return $nextAvailableAchievements;
+    }
+
+    /**
+     * Get the current badge
+     * 
+     * @return string
+     */
+    public function getCurrentBadgeAttribute()
+    {
+        $lastBadge = $this->badges()->latest()->first();
+        return !$lastBadge ? '' : $lastBadge->name;
+    }
+
+    /**
+     * Get the next badge that this user can unlock.
+     * 
+     * @return \App\Models\Badge|null
+     */
+    public function getNextBadgeAttribute()
+    {
+        $numberOfBadges = $this->badges()->count();
+        $nextBadge = Badge::where('required_achievements', '>', $numberOfBadges)
+            ->orderBy('required_achievements')
+            ->first();
+        return !$nextBadge ? null : $nextBadge;
+    }
+
+    /**
+     * Get number of achievements remaining to unlock next badge.
+     * 
+     * @return int
+     */
+    public function getAchievementsForNextBadgeAttribute()
+    {
+        $numberOfAchievements = $this->achievements()->count();
+        if (!$this->next_badge) {
+            return 0;
+        }
+
+        return $this->next_badge->required_achievements - $numberOfAchievements;
+    }
 }
